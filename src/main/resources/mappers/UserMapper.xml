@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.UserMapper">
+
+    <select id="loadUserSearchList" parameterType="hashmap" resultType="map">
+        SELECT * FROM seuser ORDER BY seq ASC
+    </select>
+
+    <insert id="insertData" parameterType="list">
+        INSERT INTO seuser
+        (
+            name,
+            tel,
+            gender
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.name},
+                #{item.tel},
+                #{item.gender}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateData">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE seuser
+            SET
+            name = #{item.name},
+            tel = #{item.tel},
+            gender = #{item.gender}
+            WHERE seq = #{item.seq}
+        </foreach>
+    </update>
+
+    <delete id="deleteData" parameterType="long">
+        DELETE FROM seuser WHERE seq=#{seq}
+    </delete>
+
+    <insert id="duplicateTest" parameterType="list">
+        INSERT INTO seuser
+        (
+        seq,
+        name,
+        tel,
+        gender
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.seq},
+            #{item.name},
+            #{item.tel},
+            #{item.gender}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        name = VALUES(name),
+        tel = VALUES(tel),
+        gender = VALUES(gender)
+    </insert>
+
+</mapper>
